@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+
+import { useActions } from '../../hooks/useActions'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(false)
+  const { user } = useTypedSelector(state => state.auth)
+  const { logout } = useActions()
 
   const profileRef = useRef() as React.MutableRefObject<HTMLDivElement>
 
@@ -11,6 +17,7 @@ const Header = () => {
       setIsVisible(false)
     }
   }
+
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick)
 
@@ -22,13 +29,20 @@ const Header = () => {
   return (
     <>
       <HeaderContainer onClick={e => e.stopPropagation()}>
-        <Widgets>Widgets</Widgets>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Widgets>Widgets</Widgets>
+        </Link>
+        <Link to="/store" style={{ textDecoration: 'none' }}>
+          <Shops>Shops</Shops>
+        </Link>
         <ProfileBtn ref={profileRef} onClick={() => setIsVisible(!isVisible)}>
-          User
+          {user.username}
           {isVisible && (
             <Dropdown>
-              <DropdownChild>Edit profile</DropdownChild>
-              <DropdownChild>Log out</DropdownChild>
+              <Link to="/profile" style={{ textDecoration: 'none' }}>
+                <DropdownChild>Edit profile</DropdownChild>
+              </Link>
+              <DropdownChild onClick={logout}>Log out</DropdownChild>
             </Dropdown>
           )}
         </ProfileBtn>
@@ -53,6 +67,8 @@ const ProfileBtn = styled.div`
   cursor: pointer;
 `
 const Widgets = styled.div``
+
+const Shops = styled.div``
 
 const Dropdown = styled.div`
   position: absolute;
