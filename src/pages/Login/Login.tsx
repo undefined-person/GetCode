@@ -1,16 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { useActions } from '../../hooks/useActions'
+
 const Login = () => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const { login } = useActions()
+
+  const handleEmail = (e: React.FormEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value)
+  }
+
+  const handlePassword = (e: React.FormEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value)
+  }
+
+  const handleSubmit = () => {
+    login(email, password)
+  }
   return (
     <LoginContainer>
       <Form>
         <LoginTitle>Log in</LoginTitle>
         <Placeholder>Email</Placeholder>
-        <Input type="email" />
+        <Input type="email" value={email} onChange={e => handleEmail(e)} />
         <Placeholder>Password</Placeholder>
-        <Input type="password" />
-        <LoginButton>Continue</LoginButton>
+        <Input type="password" value={password} onChange={e => handlePassword(e)} />
+        <LoginButton onClick={handleSubmit}>Continue</LoginButton>
       </Form>
     </LoginContainer>
   )
@@ -51,6 +68,7 @@ const Input = styled.input`
   width: 100%;
   border: none;
   outline: none;
+  color: #202c39;
   border-bottom: 1px solid #202c39;
   padding: 5px;
   margin-bottom: 5px;
